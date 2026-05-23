@@ -1,0 +1,17 @@
+venv/
+.venv/
+data/
+__pycache__/
+**/__pycache__/
+*.pyc
+.coverage
+.pytest_cache/
+node_modules/
+*.egg-info/
+dist/
+build/
+.env
+.env.*
+!.env.example
+# k8s secrets — keep only the example
+deploy/k8s/secret.yaml

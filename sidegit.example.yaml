@@ -1,0 +1,32 @@
+# sidegit configuration. Copy to sidegit.yaml (project-local) or
+# /etc/sidegit/config.yaml (system-wide), or pass an explicit path with
+# `sidegit --config <path>`. All fields are optional — every key shown here
+# is the built-in default.
+#
+# Precedence, later wins: defaults → this file → env vars → CLI flags.
+#
+# Secrets (DB passwords inside DATABASE_URL, AWS credentials read by boto3)
+# should be supplied via env vars or your platform's secret store, not pinned
+# in this file.
+
+# Filesystem layout
+data_dir: ./data            # SQLite DB and local blob storage live here
+repo_dir: .                 # git repo to read for /api/git/* endpoints
+
+# HTTP server
+server:
+  host: 127.0.0.1
+  port: 5000
+
+# Database. Omit `url` to use SQLite under {data_dir}/sidegit.db.
+database:
+  url: null
+  # url: postgresql://user@host:5432/sidegit
+
+# Blob storage. Omit `s3_bucket` to use local disk under {data_dir}/blobs.
+storage:
+  s3_bucket: null
+  s3_endpoint_url: null     # set for MinIO / Cloudflare R2; leave null for AWS
+  # AWS credentials are read by boto3 from its standard chain:
+  # AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY env vars,
+  # ~/.aws/credentials, or an IAM role on the host.

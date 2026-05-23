@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sidegit
+spec:
+  replicas: 1   # only safe to scale past 1 when DATABASE_URL points at PostgreSQL
+  selector:
+    matchLabels:
+      app: sidegit
+  template:
+    metadata:
+      labels:
+        app: sidegit
+    spec:
+      containers:
+        - name: sidegit
+          image: ghcr.io/itsomri/sidegit:latest  # replace with your registry/image:tag
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SIDEGIT_CONFIG
+              value: /etc/sidegit/config.yaml
+          envFrom:
+            - secretRef:
+                name: sidegit-secret
+                optional: true
+          volumeMounts:
+            - name: config
+              mountPath: /etc/sidegit
+              readOnly: true
+            - name: data
+              mountPath: /app/data       # remove when using PostgreSQL + S3
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          readinessProbe:
+            httpGet:
+              path: /api/records
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      volumes:
+        - name: config
+          configMap:
+            name: sidegit-config
+        - name: data
+          persistentVolumeClaim:
+            claimName: sidegit-data       # remove when using PostgreSQL + S3

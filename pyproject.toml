@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sidegit"
+version = "0.1.0"
+description = "Store arbitrary data and files alongside your git commits."
+readme = "README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.10"
+authors = [{ name = "Omri Cohen" }]
+keywords = ["git", "metadata", "sidecar", "ci", "storage"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Framework :: Flask",
+    "Topic :: Software Development :: Version Control :: Git",
+]
+dependencies = [
+    "Flask>=3.0",
+    "Flask-SQLAlchemy>=3.1",
+    "SQLAlchemy>=2.0",
+    "GitPython>=3.1",
+    "PyYAML>=6.0",
+    "requests>=2.31",
+    "gunicorn>=21.2",
+]
+
+[project.optional-dependencies]
+postgres = ["psycopg2-binary>=2.9"]
+s3 = ["boto3>=1.34"]
+dev = [
+    "pytest>=8.0",
+    "pytest-flask>=1.3",
+    "pytest-cov>=4.1",
+    "ruff>=0.4",
+]
+
+[project.scripts]
+sidegit = "sidegit.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/itsomri/sidegit"
+Repository = "https://github.com/itsomri/sidegit"
+Issues = "https://github.com/itsomri/sidegit/issues"
+
+[tool.setuptools.packages.find]
+include = ["sidegit*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
+ignore = ["E501"]

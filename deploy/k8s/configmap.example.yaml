@@ -1,0 +1,17 @@
+# Copy to configmap.yaml, customize, and `kubectl apply -f deploy/k8s/configmap.yaml`.
+# This holds non-secret configuration. Secrets (DATABASE_URL, AWS_*) go in the Secret.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sidegit-config
+data:
+  config.yaml: |
+    data_dir: /app/data
+    repo_dir: /repo
+
+    server:
+      host: 0.0.0.0
+      port: 8080
+
+    # database.url is supplied via the Secret as DATABASE_URL.
+    # storage.s3_bucket / s3_endpoint_url likewise via env if you use S3.

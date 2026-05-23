@@ -1,0 +1,49 @@
+# Example: record a benchmark on every push, attaching the result to the commit
+# in a running sidegit instance.
+#
+# Required repository secrets:
+#   SIDEGIT_URL  — e.g. https://sidegit.internal.example.com
+#
+# This example assumes sidegit is reachable from your CI runner over the network.
+# If you've put auth in front of sidegit, add the appropriate Authorization header
+# to the curl calls below.
+
+name: bench
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  bench:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run benchmark
+        id: bench
+        run: |
+          # Produce two outputs: a JSON metric blob and a profile file.
+          ./scripts/run-bench.sh > metrics.json
+          ./scripts/profile.sh > profile.pprof
+
+      - name: Create record in sidegit
+        id: create
+        run: |
+          RESPONSE=$(curl -fsS -X POST "${{ secrets.SIDEGIT_URL }}/api/records" \
+            -H 'Content-Type: application/json' \
+            -d "$(jq -n \
+                  --arg commit '${{ github.sha }}' \
+                  --argjson data "$(cat metrics.json)" \
+                  --arg branch '${{ github.ref_name }}' \
+                  --arg workflow '${{ github.workflow }}' \
+                  '{commit_hash: $commit, data: $data, tags: {branch: $branch, workflow: $workflow}}')")
+          echo "record_id=$(echo "$RESPONSE" | jq -r .id)" >> "$GITHUB_OUTPUT"
+
+      - name: Attach profile blob
+        run: |
+          curl -fsS -X POST \
+            "${{ secrets.SIDEGIT_URL }}/api/records/${{ steps.create.outputs.record_id }}/blobs" \
+            -F 'file=@profile.pprof' \
+            -F 'mime_type=application/octet-stream' \
+            -F 'name=profile.pprof'
