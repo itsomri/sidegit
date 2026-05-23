@@ -23,7 +23,8 @@ jobs:
       - name: Run benchmark
         id: bench
         run: |
-          # Produce two outputs: a JSON metric blob and a profile file.
+          # Replace these with whatever produces your benchmark output.
+          # The example assumes two artifacts: a JSON metric blob and a profile file.
           ./scripts/run-bench.sh > metrics.json
           ./scripts/profile.sh > profile.pprof
 

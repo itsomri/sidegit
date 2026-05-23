@@ -12,6 +12,7 @@ dist/
 build/
 .env
 .env.*
-!.env.example
-# k8s secrets — keep only the example
+# Real config and secrets — keep only the *.example.yaml files
+sidegit.yaml
 deploy/k8s/secret.yaml
+deploy/k8s/configmap.yaml

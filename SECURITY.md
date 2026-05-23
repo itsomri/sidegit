@@ -14,3 +14,24 @@ This is intentional for v0.1 — sidegit is meant to be deployed on a trusted ne
 - An authenticating reverse proxy (Caddy with `forward_auth`, nginx with `auth_request`, an oauth2-proxy sidecar).
 - A service mesh that enforces mTLS or JWT.
 - A network-level restriction (security groups, firewall rules).
+
+## Reporting a vulnerability
+
+Please **do not** open a public GitHub issue for security problems.
+
+Use GitHub's [Private Vulnerability Reporting](https://docs.github.com/en/code-security/security-advisories/guidance-on-reporting-and-writing-information-about-vulnerabilities/privately-reporting-a-security-vulnerability) instead — from the repository's **Security** tab, click **Report a vulnerability**. That creates a private advisory only maintainers can see.
+
+We'll acknowledge as soon as possible, work on a fix, and credit you in the release notes unless you'd prefer to stay anonymous.
+
+## Scope
+
+In scope:
+
+- Path traversal or arbitrary file access via the blob storage layer.
+- SQL injection or other unsanitized-input issues.
+- Cross-origin or request-smuggling issues that survive a reasonable proxy setup.
+
+Out of scope for v0.1:
+
+- "An unauthenticated user can read records" — that's the documented threat model.
+- DoS via large uploads or many requests — deploy behind a reverse proxy with rate limits.

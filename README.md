@@ -1,5 +1,10 @@
 # sidegit
 
+[![CI](https://github.com/itsomri/sidegit/actions/workflows/ci.yml/badge.svg)](https://github.com/itsomri/sidegit/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/sidegit.svg)](https://pypi.org/project/sidegit/)
+[![Python](https://img.shields.io/pypi/pyversions/sidegit.svg)](https://pypi.org/project/sidegit/)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+
 **Store arbitrary structured data and files alongside your git commits.**
 
 sidegit is a small HTTP server + CLI that lets you attach JSON payloads and file blobs to git commits, query them back, and read your repo's refs and log over HTTP. It was built with performance benchmark results and artifacts (like profiler outputs) in mind, and this concept will be used extensively in the docs and examples, but the API and data model are unopinionated about *what* you store and may prove useful for a wider variety of use cases.
